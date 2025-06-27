@@ -31,6 +31,7 @@ detected_host_os() => enum {
 #define INDICATOR_YELLOW 0xFF, 0x66, 0x00
 #define INDICATOR_GREEN  0x30, 0xD0, 0x10
 
-#define INDICATOR_INDEX_POWER 13
+#define INDICATOR_INDEX_POWER 0
+#define INDICATOR_MACRO_POWER 13
 
 #define TAP_MIN_ELAPSED 10

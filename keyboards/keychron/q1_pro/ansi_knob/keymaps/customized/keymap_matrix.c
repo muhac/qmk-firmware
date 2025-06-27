@@ -82,6 +82,37 @@ void lock_system_and_keyboard(void) {
     }
 }
 
+// macro record/replay indicator
+bool MACRO_RECORDING = false;
+
+Indicator MACRO_NO_BUFFER = {500,  0, false};
+Indicator MACRO_REPLAYING = {1000, 0, false};
+
+void dynamic_macro_record_start_user(void) {
+    MACRO_RECORDING = true;
+}
+
+void dynamic_macro_record_end_user(int8_t direction) {
+    MACRO_RECORDING = false;
+}
+
+void dynamic_macro_record_key_user(int8_t direction, keyrecord_t *record) {
+    indicator_activate(&MACRO_NO_BUFFER);
+}
+
+void dynamic_macro_play_user(int8_t direction) {
+    indicator_activate(&MACRO_REPLAYING);
+}
+
+void scan_macro_timer(void) {
+    if (indicator_is_active(&MACRO_NO_BUFFER)) {
+        indicator_update(&MACRO_NO_BUFFER);
+    }
+    if (indicator_is_active(&MACRO_REPLAYING)) {
+        indicator_update(&MACRO_REPLAYING);
+    }
+}
+
 // CAPS LOCK when tap, SECURE LOCK when hold
 Indicator MY_LANG_LOCK_TAPPED = {500, 0, false};
 // PO when tap, LS when hold
@@ -119,6 +150,15 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         }
     }
 
+    // macro indicator
+    if (indicator_is_active(&MACRO_NO_BUFFER)) {
+        rgb_matrix_set_color(INDICATOR_MACRO_POWER, INDICATOR_YELLOW);
+    } else if (indicator_is_active(&MACRO_REPLAYING)) {
+        rgb_matrix_set_color(INDICATOR_MACRO_POWER, INDICATOR_GREEN);
+    } else if (MACRO_RECORDING) {
+        rgb_matrix_set_color(INDICATOR_MACRO_POWER, INDICATOR_RED);
+    }
+
     return false;
 }
 
@@ -130,5 +170,6 @@ void matrix_init_user(void) {
 // loop scan
 void matrix_scan_user(void) {
     scan_secure_timer();
+    scan_macro_timer();
     scan_key_timer();
 }

@@ -33,7 +33,7 @@ jobs:
       run: |
         brew tap ArmMbed/homebrew-formulae
         brew install avr-gcc gcc-arm-embedded
-        make lets_split-rev2-default-avrdude
+        python3 -m pip install -r requirements.txt --break-system-packages
 
     - name: Run QMK Setup
       run: qmk setup

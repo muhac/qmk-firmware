@@ -116,5 +116,21 @@ void leader_end_user(void) {
     } else if (leader_sequence_two_keys(KC_A, KC_S)) {
         // Leader, a, s => GUI+S
         tap_code16(LGUI(KC_S));
+    } else if (leader_sequence_two_keys(KC_O, KC_S)) {
+        // Leader, o, s => print os
+        switch(detected_host_os()) {
+        case OS_MACOS:
+        case OS_IOS:
+            SEND_STRING("Apple");
+            break;
+        case OS_WINDOWS:
+            SEND_STRING("Windows");
+            break;
+        case OS_LINUX:
+            SEND_STRING("Linux");
+            break;
+        default:
+            SEND_STRING("unknown");
+        }
     }
 }
